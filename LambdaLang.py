@@ -38,4 +38,21 @@ def parsexpr(expr): # this entire thing consists of hackish things.
             return term
     return [expr]
 
+def runsnippet(snippet):
+    functions = {
+        "write": ((1), lambda x: print(x)),
+        "+": ((-1, 1), lambda x, y: (x + y))
+    }
+
+    def checksnippet(func, string):
+        for x in range(0, len(string) - len(func) - 1):
+            if string[x: (x + len(func) - 1)] == func:
+                return True
+        return False
+    
+    for x in functions:
+        if checksnippet(x, snippet):
+            pass
+    return NotImplemented
+
 print(parsexpr(program))
