@@ -2,7 +2,7 @@ filename = "TestFile.ll"         #input("Enter a file: ")
 f = open(filename)
 program = f.read()
 
-def parsexpr(expr):
+def parsexpr(expr): # this entire thing consists of hackish things.
     term = []
     for x in range(0, len(expr) - 1):
         if expr[x] == "\\":
@@ -10,8 +10,8 @@ def parsexpr(expr):
             var = ""
             for i in range(x, len(expr) - 1):
                 if expr[i] == ".":
-                    term.append(["var", var, var])
-                    term.append(parsexpr(expr[(i): (len(expr) - 1)]))
+                    term.append(["var", var[1:], var[1:]])
+                    term.append(parsexpr(expr[(i + 2):]))
                     return term
                 else:
                     var += expr[x + i]
@@ -36,5 +36,6 @@ def parsexpr(expr):
                 else:
                     var += expr[i]
             return term
+    return expr
 
 print(parsexpr(program))
