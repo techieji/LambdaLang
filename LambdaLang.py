@@ -31,8 +31,8 @@ def parsexpr(expr): # this entire thing consists of hackish things.
                         if not flag2:
                             flag2 = True
                         elif flag2:
-                            term.append(parsexpr(arg[1:]))
-                            term.append(parsexpr(var))
+                            term.append(parsexpr(arg[2:len(arg) - 1]))    #term.append(parsexpr(arg[1:]))
+                            term.append(parsexpr(var[1:len(var) - 1]))    #term.append(parsexpr(var))
                 else:
                     var += expr[i]
             return term
