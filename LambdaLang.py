@@ -15,7 +15,7 @@ def parsexpr(expr): # this entire thing consists of hackish things.
                     return term
                 else:
                     var += expr[x + i]
-        elif expr[x] == "(": # need to implement resursiveness
+        elif expr[x] == "(": # need to implement resursiveness and IT NEEDS TO WORK PROPERLY!!!!!!!!!!
             term.append('ap')
             var = ""
             arg = ""
@@ -31,11 +31,11 @@ def parsexpr(expr): # this entire thing consists of hackish things.
                         if not flag2:
                             flag2 = True
                         elif flag2:
-                            term.append([arg[1:]])
-                            term.append([var])
+                            term.append(parsexpr(arg[1:]))
+                            term.append(parsexpr(var))
                 else:
                     var += expr[i]
             return term
-    return expr
+    return [expr]
 
 print(parsexpr(program))
