@@ -1,10 +1,11 @@
-f = open("File.txt")
+filename = "TestFile.ll"         #input("Enter a file: ")
+f = open(filename)
 program = f.read()
 
 def parsexpr(expr):
     term = []
-    for x in range(0, len(expr)):
-        if expr[x] == "/":
+    for x in range(0, len(expr) - 1):
+        if expr[x] == "\\":
             term.append('ab')
             var = ""
             for i in range(x, len(expr) - 1):
@@ -14,20 +15,26 @@ def parsexpr(expr):
                     return term
                 else:
                     var += expr[x + i]
-        elif expr[x] == "(":
+        elif expr[x] == "(": # need to implement resursiveness
             term.append('ap')
             var = ""
             arg = ""
-            flag = false
-            for i in range(x, len(expr) - 1):
-                if expr[i] == ")":
+            flag = False
+            flag2 = False
+            for i in range(x, len(expr)):
+                if expr[i] == ")" and not flag:
+                    var += expr[i]
                     flag = True
-                elif flag:
+                if flag:
+                    arg += expr[i]
                     if expr[i] == ")":
-                        
-                        flag = False
-                    else:
-                        arg += i
+                        if not flag2:
+                            flag2 = True
+                        elif flag2:
+                            term.append([arg[1:]])
+                            term.append([var])
                 else:
-                    var += i
-    return term
+                    var += expr[i]
+            return term
+
+print(parsexpr(program))
