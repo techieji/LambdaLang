@@ -73,3 +73,16 @@ def runsnippet(snippet):
     return functions[function][1](args)
     return NotImplemented
 
+def findsnippets(lis):
+    snippets = []
+    for x in range(0, len(lis)):
+        try:
+            if type(lis[x]) == list:
+                snippets.append((x ,findsnippets(lis[x])))
+            elif runsnippet(lis[x]) != NotImplemented:
+                snippets.append((x, lis[x]))
+        except:
+            continue
+    return snippets
+
+print(findsnippets(parsexpr(program)))
