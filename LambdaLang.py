@@ -40,19 +40,36 @@ def parsexpr(expr): # this entire thing consists of hackish things.
 
 def runsnippet(snippet):
     functions = {
-        "write": ((1), lambda x: print(x)),
-        "+": ((-1, 1), lambda x, y: (x + y))
+        "write": ((1), lambda x: print(x[0])),
+        "+": ((-1, 1), lambda x: int(x[0]) + int(x[1]))
     }
 
-    def checksnippet(func, string):
-        for x in range(0, len(string) - len(func) - 1):
-            if string[x: (x + len(func) - 1)] == func:
-                return True
-        return False
-    
+    def parse(string):
+        lis = []
+        word = ""
+        for x in string:
+            if x == " ":
+                lis.append(word)
+                word = ""
+            else:
+                word += x
+        lis.append(word)
+        return lis
+
+    function = ""
+    code = parse(snippet)
     for x in functions:
-        if checksnippet(x, snippet):
-            pass
+        if x in code:
+            function = x
+            break
+    
+    args = []
+    indexes = functions[function][0]
+    if type(indexes) != tuple:
+        indexes = (indexes)
+    for x in indexes:
+        args.append(code[code.index(function) + x])
+
+    return functions[function][1](args)
     return NotImplemented
 
-print(parsexpr(program))
