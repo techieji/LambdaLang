@@ -51,7 +51,7 @@ def runsnippet(snippet):
             if x == " ":
                 lis.append(word)
                 word = ""
-            else:
+            elif type(x) != list:
                 word += x
         lis.append(word)
         return lis
@@ -63,26 +63,39 @@ def runsnippet(snippet):
             function = x
             break
     
-    args = []
-    indexes = functions[function][0]
-    if type(indexes) != tuple:
-        indexes = (indexes)
-    for x in indexes:
-        args.append(code[code.index(function) + x])
-
-    return functions[function][1](args)
-    return NotImplemented
+    try:
+        args = []
+        indexes = functions[function][0]
+        if type(indexes) != tuple:
+            indexes = (indexes)
+        for x in indexes:
+            args.append(code[code.index(function) + x])
+        return functions[function][1](args)
+    finally:
+        return NotImplemented
 
 def findsnippets(lis):
-    snippets = []
+    s = []
     for x in range(0, len(lis)):
         try:
-            if type(lis[x]) == list:
-                snippets.append((x ,findsnippets(lis[x])))
+            if type(lis[x]) == list and lis[x] != []:
+                s.append(findsnippets(lis[x]))
             elif runsnippet(lis[x]) != NotImplemented:
-                snippets.append((x, lis[x]))
+                s.append(lis[x])
         except:
             continue
-    return snippets
+    return s
 
-print(findsnippets(parsexpr(program)))
+def collapse(sniplist):
+    if sniplist == NotImplemented:
+        return NotImplemented
+    output = []
+    print(sniplist)
+    for x in sniplist:
+        if len(x) <= 1:
+            output.append(collapse(runsnippet(x)))
+        else:
+            output.append(runsnippet(x))
+    return [x for x in output if x != NotImplemented]
+
+print(collapse(findsnippets(parsexpr(program))))
