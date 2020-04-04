@@ -41,7 +41,9 @@ def parsexpr(expr): # this entire thing consists of hackish things.
 def runsnippet(snippet):
     functions = {
         "write": ((1), lambda x: print(x[0])),
-        "+": ((-1, 1), lambda x: int(x[0]) + int(x[1]))
+        "+": ((-1, 1), lambda x: int(x[0]) + int(x[1])),
+        "-": ((-1, 1), lambda x: int(x[0]) - int(x[1])),
+        "||": ((-1, 1), lambda x: int(x[0]) or int(x[1]))
     }
 
     def parse(string):
@@ -63,16 +65,13 @@ def runsnippet(snippet):
             function = x
             break
     
-    try:
-        args = []
-        indexes = functions[function][0]
-        if type(indexes) != tuple:
-            indexes = (indexes)
-        for x in indexes:
-            args.append(code[code.index(function) + x])
-        return functions[function][1](args)
-    finally:
-        return NotImplemented
+    args = []
+    indexes = functions[function][0]
+    if type(indexes) != tuple:
+        indexes = (indexes)
+    for x in indexes:
+        args.append(code[code.index(function) + x])
+    return functions[function][1](args)
 
 def findsnippets(lis):
     s = []
@@ -82,6 +81,8 @@ def findsnippets(lis):
                 s.append(findsnippets(lis[x]))
             elif runsnippet(lis[x]) != NotImplemented:
                 s.append(lis[x])
+            else:
+                s.append(lis[x])
         except:
             continue
     return s
@@ -90,7 +91,6 @@ def collapse(sniplist):
     if sniplist == NotImplemented:
         return NotImplemented
     output = []
-    print(sniplist)
     for x in sniplist:
         if len(x) <= 1:
             output.append(collapse(runsnippet(x)))
