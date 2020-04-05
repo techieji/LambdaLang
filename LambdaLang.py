@@ -38,6 +38,13 @@ def parsexpr(expr): # this entire thing consists of hackish things.
             return term
     return [expr]
 
+def resolveap(astsnippet):
+    if astsnippet[0] == "ap":
+        assert(astsnippet[2][0] == "ab")
+        var = astsnippet[2][1][1]
+    else:
+        return astsnippet
+
 def runsnippet(snippet):
     functions = {
         "write": ((1), lambda x: print(x[0])),
@@ -101,5 +108,5 @@ def collapse(sniplist):
             output.append(runsnippet(x))
     return [x for x in output if x != NotImplemented]
 
-#print(collapse(findsnippets(parsexpr(program))))
-print(parsexpr("(\\x. x + 5)(5)"))
+print(collapse(findsnippets(parsexpr(program))))
+#print(parsexpr("(\\x. x + 5)(5)"))
