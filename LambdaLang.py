@@ -43,7 +43,10 @@ def runsnippet(snippet):
         "write": ((1), lambda x: print(x[0])),
         "+": ((-1, 1), lambda x: int(x[0]) + int(x[1])),
         "-": ((-1, 1), lambda x: int(x[0]) - int(x[1])),
-        "||": ((-1, 1), lambda x: int(x[0]) or int(x[1]))
+        "*": ((-1, 1), lambda x: int(x[0]) * int(x[1])),
+        "/": ((-1, 1), lambda x: int(x[0]) / int(x[1])),
+        "^": ((-1, 1), lambda x: pow(int(x[0]), int(x[1]))),
+        "||": ((-1, 1), lambda x: int(x[0]) or int(x[1])),
     }
 
     def parse(string):
@@ -98,4 +101,5 @@ def collapse(sniplist):
             output.append(runsnippet(x))
     return [x for x in output if x != NotImplemented]
 
-print(collapse(findsnippets(parsexpr(program))))
+#print(collapse(findsnippets(parsexpr(program))))
+print(parsexpr("(\\x. x + 5)(5)"))
