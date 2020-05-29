@@ -1,8 +1,8 @@
-filename = "TestFile.ll"         #input("Enter a file: ")
+filename = "TestFile.ll"
 f = open(filename)
 program = f.read()
 
-def parsexpr(expr): # this entire thing consists of hackish things.
+def parsexpr(expr):
     term = []
     for x in range(0, len(expr) - 1):
         if expr[x] == "\\":
