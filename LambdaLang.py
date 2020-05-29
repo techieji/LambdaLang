@@ -81,7 +81,7 @@ def runsnippet(snippet):
         return lis
 
     function = ""
-    code = parse(snippet)
+    code = parse(snippet)[0]
     for x in functions:
         if x in code:
             function = x
@@ -110,7 +110,7 @@ def findsnippets(lis):
     return s
 
 def collapse(sniplist):
-    if sniplist == NotImplemented:
+    if sniplist == NotImplemented or sniplist == None:
         return NotImplemented
     output = []
     for x in sniplist:
@@ -120,5 +120,21 @@ def collapse(sniplist):
             output.append(runsnippet(x))
     return [x for x in output if x != NotImplemented]
 
-#print(collapse(findsnippets(parsexpr(program))))
-print(parsexpr("(\\x. x + 5)(5)"))
+def runast(ast):
+    if ast[0] == 'ap':
+        ab = ast[2]
+        abvar = ab[1][2]
+        abexpr = ab[2][0]
+        varval = ast[1][0]
+        snippet = ""
+        for x in abexpr.split(" "):
+            if x == abvar:
+                snippet += varval
+            else:
+                snippet += x
+        return runsnippet(snippet)
+    elif ast[0] == 'ab':
+        pass
+
+print(runast(parsexpr(program)))
+#print(parsexpr("(\\x. x + 5)(5)"))
