@@ -57,6 +57,8 @@ def resolveap(astsnippet):
         return astsnippet
 
 def runsnippet(snippet):
+    if type(snippet) == list:
+        snippet = snippet[0].replace(" ", "")
     functions = {
         "write": ((1), lambda x: print(x[0])),
         "+": ((-1, 1), lambda x: int(x[0]) + int(x[1])),
@@ -135,6 +137,17 @@ def runast(ast):
         return runsnippet(snippet)
     elif ast[0] == 'ab':
         pass
+    else:
+        return runsnippet(ast)
 
-print(runast(parsexpr(program)))
-#print(parsexpr("(\\x. x + 5)(5)"))
+def main():
+    while True:
+        code = input("> ")
+        try:
+            print(runast(parsexpr(code)))
+        except KeyboardInterrupt:
+            raise
+        except:
+            print("An error occured!")
+
+main()
