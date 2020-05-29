@@ -39,13 +39,26 @@ def parsexpr(expr): # this entire thing consists of hackish things.
     return [expr]
 
 def resolveap(astsnippet):
+    def replace(lis, var, val):
+        if type(lis) == str:
+            returnstring = ""
+            for x in range(0, len(lis)):
+                if lis[x:(x + len(lis))] == var and lis[x - 1] == lis[x + 1] and lis[x - 1] == " ":
+                    pass
+        elif type(lis) == list:
+            return [replace(x, var, val) for x in lis]
+
     if astsnippet[0] == "ap":
         assert(astsnippet[2][0] == "ab")
         var = astsnippet[2][1][1]
+        value = astsnippet[1]
+        return resolveap(astsnippet[2][2], astsnippet[2][1][1], astsnippet[1])
     else:
         return astsnippet
 
 def runsnippet(snippet):
+    if type(snippet) == list:
+        snippet = snippet[0].replace(" ", "")
     functions = {
         "write": ((1), lambda x: print(x[0])),
         "+": ((-1, 1), lambda x: int(x[0]) + int(x[1])),
@@ -54,6 +67,7 @@ def runsnippet(snippet):
         "/": ((-1, 1), lambda x: int(x[0]) / int(x[1])),
         "^": ((-1, 1), lambda x: pow(int(x[0]), int(x[1]))),
         "||": ((-1, 1), lambda x: int(x[0]) or int(x[1])),
+        "&&": ((-1, 1), lambda x: int(x[0]) and int(x[1])),
     }
 
     def parse(string):
@@ -69,7 +83,7 @@ def runsnippet(snippet):
         return lis
 
     function = ""
-    code = parse(snippet)
+    code = parse(snippet)[0]
     for x in functions:
         if x in code:
             function = x
@@ -98,7 +112,7 @@ def findsnippets(lis):
     return s
 
 def collapse(sniplist):
-    if sniplist == NotImplemented:
+    if sniplist == NotImplemented or sniplist == None:
         return NotImplemented
     output = []
     for x in sniplist:
@@ -108,5 +122,32 @@ def collapse(sniplist):
             output.append(runsnippet(x))
     return [x for x in output if x != NotImplemented]
 
-print(collapse(findsnippets(parsexpr(program))))
-#print(parsexpr("(\\x. x + 5)(5)"))
+def runast(ast):
+    if ast[0] == 'ap':
+        ab = ast[2]
+        abvar = ab[1][2]
+        abexpr = ab[2][0]
+        varval = ast[1][0]
+        snippet = ""
+        for x in abexpr.split(" "):
+            if x == abvar:
+                snippet += varval
+            else:
+                snippet += x
+        return runsnippet(snippet)
+    elif ast[0] == 'ab':
+        pass
+    else:
+        return runsnippet(ast)
+
+def main():
+    while True:
+        code = input("> ")
+        try:
+            print(runast(parsexpr(code)))
+        except KeyboardInterrupt:
+            raise
+        except:
+            print("An error occured!")
+
+main()
