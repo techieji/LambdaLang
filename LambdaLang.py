@@ -136,18 +136,19 @@ def runast(ast):
                 snippet += x
         return runsnippet(snippet)
     elif ast[0] == 'ab':
-        pass
+        return [ast[0], ast[1], runast([2])]
     else:
         return runsnippet(ast)
 
-def main():
+def _main():
     while True:
         code = input("> ")
         try:
-            print(runast(parsexpr(code)))
+            print(parsexpr(code))
         except KeyboardInterrupt:
             raise
         except:
             print("An error occured!")
 
-main()
+print(runast(['ap', ['5'], ['ab', ['var', 'y', 'y'], ['ap', ['5'], ['ab', ['var', 'x', 'x'], ['x + 5']]]]]))
+#_main()
