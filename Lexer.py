@@ -1,4 +1,4 @@
-class Lexer:
+class Lexer: # This is not used
     def __init__(self, source, identifiers):
         self.source = source
         self.pos = 0
@@ -119,6 +119,8 @@ def run(code: str):
 
 code = "write <add <1 + 2>>"
 
-while True:
-    code = input('> ')
-    print(run(code))
+print(run(code))
+
+# while True:
+#     code = input('> ')
+#     print(run(code))
