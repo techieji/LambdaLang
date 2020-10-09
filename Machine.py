@@ -12,34 +12,38 @@ class Machine:
     self.var = var
     self.code = code
     self.env = env
+    self.val = None
   
   def __call__(self, val, env={}):
     wk = self.substitute(self.var, val)
+    self.env[self.var] = val
     for var, val in {**env, **self.env}.items():
       wk = Machine(var, wk).substitute(var, val)
+      self.env[var] = val
     return Machine.run(Machine("quaint", wk))
 
   def substitute(self, var, val):
     newcode = []
-    for kw, a, *rest in self.code:
-      if kw == "LOAD" and a == var:
+    self.val = val
+    for kw, *rest in self.code:
+      if kw == "LOAD" and rest[0] == var:
         newcode.append(("CONST", val))
       else:
-        newcode.append((kw, a, *rest))
+        newcode.append((kw, *rest))
     return newcode
 
-  def run(machine, env={}):  # Note that this is basic; it doesn't support RUNMACHINE
+  def run(machine, env={}):
     code = machine.code
+    # print(code)
     s = []
     for kw, *a in code:
+      # print(kw)
       if kw == "STACK":
-        # print("stacks")
         stacks[a[0]](s)
       elif kw in envs:
-        # print("envs")
         envs[kw](s, a)
       elif kw == "RUNMACHINE":
-        a[0].env = dict(env)
+        a[0].env = machine.env
         s.append(
           a[0]
         )
@@ -61,7 +65,7 @@ multi = Machine(
     [("LOAD", "x"), 
     ("LOAD", "y"), 
     ("STACK", "ADD"), 
-    ("RETURN")]
+    ("RETURN",)]
   )),
-  ("RETURN")]
+  ("RETURN",)]
 )

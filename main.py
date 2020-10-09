@@ -1,8 +1,8 @@
 from YALL import Lexer
-from Machine import Machine, single
+from Machine import Machine, single, multi
 
-single.env = {"y": 6}
-single(5)
+# single.env = {"y": 6}
+print(multi(5)(5))
 
 # prog = r"(\x. (\y. x + y))"
 # var = []
