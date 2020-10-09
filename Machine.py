@@ -1,10 +1,14 @@
 stacks = {
   "ADD": lambda s: s.append(s.pop() + s.pop()),
-  "OUT": lambda s: print(s.pop())
+  "SUB": lambda s: s.append(s.pop() - s.pop()),
+  "OUT": lambda s: print(s.pop()),
+  "POW": lambda s: pow(s.pop(), s.pop())
 }
 
 envs = {
-  "CONST": lambda s, a: s.append(a[0])
+  "CONST": lambda s, a: s.append(a[0]),
+  "CONSTPOW": lambda s, a: s.append(pow(s.pop(), a)),
+  "PYFUNC": lambda s, a: s.append(a(s))
 }
 
 class Machine:

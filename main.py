@@ -1,17 +1,8 @@
-from YALL import Lexer
-from Machine import Machine, single, multi
+# from YALL import Lexer
+# from Machine import Machine
+from scanner import ap, ab, eq
 
-# single.env = {"y": 6}
-print(multi(5)(5))
-
-# prog = r"(\x. (\y. x + y))"
-# var = []
-# bes = []
-# lex = Lexer(prog)
-# while not lex.basic:
-#   lex = Lexer(lex.scanexpr())
-#   scan = Lexer(lex.text, "\\", ".")
-#   var.append(scan.scanexpr().strip())
-#   bes.append(scan.eatRest().strip())
-# print(var)
-# print(bes)
+prog = r"fn1 = fn2 = (\x. (\y. (sub)(x)(y)))(5)(5)"
+base = eq(prog)
+appl = ap(base[-1])
+abra = ab(appl[0])

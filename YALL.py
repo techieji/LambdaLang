@@ -8,7 +8,10 @@ class Lexer:
     self.level = 0
 
   def eat(self):
-    ret = self.text[self.pos]
+    try:
+      ret = self.text[self.pos]
+    except IndexError:
+      return
   
     if ret == self.start:
       self.level += 1
@@ -43,7 +46,8 @@ class Lexer:
   def scanexpr(self, revert=False):
     l = []
     while self.level <= 0:
-      self.eat()
+      if self.eat() == None:
+        break
     if revert:
       self.mark()
     while self.level > 0:
